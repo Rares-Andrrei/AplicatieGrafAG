@@ -93,9 +93,26 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev)
         }
         if(index != -1)
         {
-            selected.updateCoords(ev->pos());
-            graph.updateNodes(index, selected);
-            update();
+            bool verificare = true;
+            for(const auto aux : n)
+            {
+                if(aux->getInfo() != selected.getInfo())
+                {
+                    Node temporary;
+                    temporary.updateCoords(ev->pos());
+                    QPointF aux2 = (*aux) - temporary;
+                    if(aux2.x() < 2*nodeRadius && aux2.y() < 2*nodeRadius)
+                    {
+                       verificare = false;
+                    }
+                }
+            }
+            if(verificare)
+            {
+                selected.updateCoords(ev->pos());
+                graph.updateNodes(index, selected);
+                update();
+            }
         }
     }
 }
