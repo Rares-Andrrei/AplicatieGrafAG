@@ -25,22 +25,21 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
         {
             update();
         }
-        // verificare suprapunere noduri in addNode
     }
     else if (ev->button() == Qt::LeftButton)
     {
-        vector<Node> nodes = graph.getNodes();
+        vector<Node*> nodes = graph.getNodes();
         Node selected;
         bool ok = false;
-        for(Node& n: nodes)
+        for(const Node* n: nodes)
         {
-            QPointF coord = n.getCoordinate();
+            QPointF coord = (*n).getCoordinate();
             float dist = sqrt((ev->position().x() - coord.x())*(ev->position().x() - coord.x())+
                               (ev->position().y() - coord.y())*(ev->position().y() - coord.y()));
 
             if (dist <= nodeRadius)
             {
-                selected = n;
+                selected = *n;
                 ok = true;
                 break;
             }
@@ -78,17 +77,17 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev)
 {
     if(ui->checkBox->isChecked())
     {
-        vector<Node> n = graph.getNodes();
+        vector<Node*> n = graph.getNodes();
         Node selected;
         int index = -1;
         for(unsigned long long i = 0; i < n.size(); i++)
         {
-            QPointF coord = n[i].getCoordinate();
+            QPointF coord = n[i]->getCoordinate();
             float dist = sqrt((ev->position().x() - coord.x())*(ev->position().x() - coord.x())+
                               (ev->position().y() - coord.y())*(ev->position().y() - coord.y()));
             if (dist <= nodeRadius)
             {
-                selected = n[i];
+                selected = *n[i];
                 index = i;
             }
         }
@@ -104,17 +103,17 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev)
 void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
-    vector<Node> nodes = graph.getNodes();
-    for(Node& n:nodes)
+    vector<Node*> nodes = graph.getNodes();
+    for(const Node* n : nodes)
     {
-        QPointF coord = n.getCoordinate();
+        QPointF coord = n->getCoordinate();
         QRect r(coord.x() - nodeRadius, coord.y()- nodeRadius,
                 2*nodeRadius, 2*nodeRadius);
         QPen pen;
         pen.setColor(Qt::red);
         p.setPen(pen);
         p.drawEllipse(r);
-        QString num = QString::number(n.getInfo());
+        QString num = QString::number(n->getInfo());
         p.drawText(r, Qt::AlignCenter, num);
     }
     const vector<Edge> edges = graph.getEdges();

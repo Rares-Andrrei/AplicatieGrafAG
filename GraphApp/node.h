@@ -17,6 +17,5 @@ public:
     bool operator == (const Node &aux);
     void operator =(const Node &aux);
     Node(const Node& n);
-    //functie pentru distanta dintre 2 noduri
 };
 #endif // NODE_H

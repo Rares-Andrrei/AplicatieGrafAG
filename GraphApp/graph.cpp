@@ -6,8 +6,6 @@
 Graph::Graph()
 {
     oriented = false;
-    nodes.reserve(200); //Daca se depaseste capacitatea de noduri se traseaza aiurea arcele pt ca vectorul isi schimba pozitia in memorie si arcul format din cei doi pointeri catre noduri va pointa eronat
-    // de rezolvat pe viitor
 }
 
 bool Graph::isoriented()
@@ -16,7 +14,7 @@ bool Graph::isoriented()
 }
 void Graph::updateNodes(int index, Node node)
 {
-    nodes[index] = node;
+    *nodes[index] = node;
 }
 
 void Graph::modifyState(bool aux)
@@ -37,7 +35,7 @@ bool Graph::addNode(Node n)
     bool verificare = true;
     for(auto aux : nodes)
     {
-        QPointF aux2 = n - aux;
+        QPointF aux2 = n - *aux;
         if(aux2.x() < 2*nodeRadius && aux2.y() < 2*nodeRadius)
         {
            verificare = false;
@@ -46,7 +44,9 @@ bool Graph::addNode(Node n)
     if(verificare)
     {
         n.setInfo((int)nodes.size() + 1);
-         nodes.push_back(n);
+        Node* newNode = new Node;
+        *newNode = n;
+         nodes.push_back(newNode);
         matriceAdiacentaUpdate();
         matriceAdiacentaAfisare();
         return true;
@@ -79,8 +79,7 @@ bool Graph::addEdge(Edge a)
 }
 void Graph::matriceAdiacentaAfisare()
 {
-
-    QFile file("C:\\Users\\RaresAndrei\\Desktop\\AG\\Graph2\\date.txt");
+    QFile file("D:\\GitRepository\\AplicatieGrafAG\\GraphApp\\date.txt");
     if(file.open(QFile::Append | QFile::Text))
     {
             QTextStream out(&file);
@@ -128,16 +127,22 @@ void Graph::matriceAdiacentaUpdate()
     }
 }
 int Graph::getNumberOfNodes() const {return (int)nodes.size();}
-vector<Node> Graph::getNodes() const {return nodes;}
+vector<Node*> Graph::getNodes() const {return nodes;}
 vector<Edge> Graph::getEdges() const {return edges;}
-
+Graph::~Graph()
+{
+    for (unsigned long long i = 0; i < nodes.size(); ++i)
+    {
+           delete nodes[i];
+    }
+}
 Node *Graph::getPointerToNode(Node n)
 {
     for(unsigned long long i = 0; i < nodes.size(); i++)
     {
-        if(nodes[i] == n)
+        if(*nodes[i] == n)
         {
-            return &(*(nodes.begin() + i));
+            return *(nodes.begin() + i);
         }
     }
     return nullptr;

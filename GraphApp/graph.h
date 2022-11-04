@@ -9,7 +9,7 @@ class Graph
 {
 private:
      const int nodeRadius = 10;
-    vector<Node> nodes;
+    vector<Node*> nodes;
     vector<Edge> edges;
     vector<vector<int>> matriceAdiacenta;
     bool oriented;
@@ -24,8 +24,9 @@ public:
     void matriceAdiacentaUpdate();
     void matriceAdiacentaAfisare();
     int getNumberOfNodes() const;
-    vector<Node> getNodes() const;
+    vector<Node*> getNodes() const;
     vector<Edge> getEdges() const;
+    ~Graph();
     Node* getPointerToNode(Node n);
 
 };
