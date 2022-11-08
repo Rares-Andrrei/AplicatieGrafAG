@@ -3,6 +3,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <vector>
+#include <QInputDialog>
 #include <iostream>
 #include <math.h>
 MainWindow::MainWindow(QWidget *parent)
@@ -165,6 +166,16 @@ void MainWindow::paintEvent(QPaintEvent *)
             p.drawLine(e.getFirstNode()->getCoordinate(), e.getSecondNode()->getCoordinate());
         }
     }
+//    QPointF middle = QPoint(8,8);
+//    QPointF coord = middle;
+//    QRect r(coord.x() - nodeRadius, coord.y()- nodeRadius,
+//            2*nodeRadius, 2*nodeRadius);
+//    QPen pen;
+//    pen.setColor(Qt::red);
+//    p.setPen(pen);
+//    p.drawEllipse(r);
+//    QString num = QString::number(2);
+//    p.drawText(r, Qt::AlignCenter, num);
 
 }
 
@@ -186,3 +197,42 @@ void MainWindow::on_radioButton_released()
         update();
     }
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    graph.clearEdges();
+    int n = QInputDialog::getInt(this, "Input", "Introdu numarul de drumuri: ");
+    for(int i = 0; i < n; i++)
+    {
+        graph.generateRandomRoad();
+
+    }
+    update();
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    graph.clearEdges();
+    int n = QInputDialog::getInt(this, "Input", "Introdu numarul de cicluri: ");
+    for(int i = 0; i < n; i++)
+    {
+        graph.generateRandomCycle();
+
+    }
+    update();
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    graph.clearNodes();
+    int n = QInputDialog::getInt(this, "Input", "Introdu numarul de noduri: ");
+    for(int i = 0; i < n; i++)
+    {
+        graph.generateRandomNode();
+
+    }
+    update();
+}
+

@@ -23,6 +23,11 @@ public:
     bool addEdge(Edge a);
     void matriceAdiacentaUpdate();
     void matriceAdiacentaAfisare();
+    void clearEdges();
+    void clearNodes();
+    void generateRandomNode();
+    void generateRandomRoad();
+    void generateRandomCycle();
     int getNumberOfNodes() const;
     vector<Node*> getNodes() const;
     vector<Edge> getEdges() const;

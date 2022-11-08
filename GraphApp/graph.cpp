@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QFile>
 #include <QPainter>
+#include <QRandomGenerator>
 Graph::Graph()
 {
     oriented = false;
@@ -101,6 +102,97 @@ void Graph::matriceAdiacentaAfisare()
 
     }
     file.close();
+}
+
+void Graph::clearEdges()
+{
+    edges.clear();
+}
+
+void Graph::clearNodes()
+{
+    edges.clear();
+    nodes.clear();
+}
+
+void Graph::generateRandomNode()
+{
+    bool added = false;
+    while(!added)
+    {
+    QPointF randomCoords(QRandomGenerator::global()->bounded(10, 650), QRandomGenerator::global()->bounded(10, 550));
+    Node newNode(randomCoords);
+    if(addNode(newNode))
+        added = true;
+    }
+}
+
+void Graph::generateRandomRoad()
+{
+    oriented = true;
+    if(nodes.size() == 0)
+    {
+        return;
+    }
+    int nrEdges = 0;
+    Node* start = nodes[0];
+    Node* end = nodes[int(nodes.size()-1)];
+    std::vector<bool> pathNode(nodes.size(), false);
+    pathNode[0] = true;
+    int size = nodes.size();
+    while(nrEdges != size - 1)
+    {
+        Node* auxNode = start;
+        int k = QRandomGenerator::global()->bounded(1, size);
+        if(!pathNode[k])
+        {
+          Node* v = nodes[k];
+          Edge auxEdge(auxNode, v);
+          addEdge(auxEdge);
+          pathNode[k] = true;
+          nrEdges++;
+          start = v;
+          if(v == end)
+          {
+              break;
+          }
+        }
+    }
+}
+
+void Graph::generateRandomCycle()
+{
+    oriented = true;
+    if(nodes.size() == 0)
+    {
+        return;
+    }
+    int size = nodes.size();
+    int start = QRandomGenerator::global()->bounded(0, size - 1);
+    int nrEdges = 0;
+    std::vector<bool> pathNode(nodes.size(), false);
+    pathNode[start] = true;
+    Node* startNode = nodes[start];
+    while(nrEdges != size)
+    {
+        Node* auxNode = startNode;
+        int k = QRandomGenerator::global()->bounded(0, size);
+        if(!pathNode[k])
+        {
+          Node* v = nodes[k];
+          Edge auxEdge(auxNode, v);
+          addEdge(auxEdge);
+          pathNode[k] = true;
+          nrEdges++;
+          startNode = v;
+        }
+        if(k == start && nrEdges >= 2)
+        {
+            Edge auxEdge(auxNode, nodes[start]);
+            addEdge(auxEdge);
+            break;
+        }
+    }
 }
 void Graph::matriceAdiacentaUpdate()
 {
